@@ -9,7 +9,7 @@ In the model, names are allowed to migrate ratings on an individual basis accord
 Overall, this model captures the combined stochastic behaviour of both name migrations and spread forecasts. To ensure consistency, all dynamic processes are appropriately correlated with one another. Ultimately, at any simulated time the current basket loss level and pool spread can be used to check for trigger breaches. The portion of first trigger breaches relative to the number of simulated paths is an important measure. It represents an estimate of the probability of ever experiencing a spread trigger breach.
 
 Calibration of this model may be a challenge given the number of correlated inputs and limited
-historical credit data (see https://finpricing.com/lib/FxForwardCurve.html). In this report we essentially test submitted inputs. In particular, we rely on the provided credit transition matrix and spread mean reverting parameters. On the other hand, we do investigate shocked scenarios as one way of assessing the sensitivity of the output to the supplied inputs.
+historical credit data. In this report we essentially test submitted inputs. In particular, we rely on the provided credit transition matrix and spread mean reverting parameters. On the other hand, we do investigate shocked scenarios as one way of assessing the sensitivity of the output to the supplied inputs.
 
 
 Predicting an aggregate basket spread is highly non-trivial owing to the dynamics of the situation. The contribution to the overall spread from an individual name with a fixed credit rating is a stochastic process. On top of this, the credit rating of a given name may change at any time, despite there being no changes to the spreads of other names with similar ratings. Furthermore, all movements are correlated. That is, spreads are correlated with one another, migrations are correlated with one another and spreads are correlated with migrations. 
@@ -19,32 +19,21 @@ In order to forecast the basket loss level and pool spread it is essential to co
 As suggested above, the spread of each name is not modeled individually. Instead, the names
 in the basket are classified according to their credit rating. In this context we consider 7 such classes: ‘AAA’, ‘AA’, ‘A’, ‘BBB’, ‘BB’, ‘B’ and ‘DEFAULT’. In terms of notation, it is useful to index the ratings such that ‘AAA’ corresponds to 1, ‘AA’ corresponds to 2, etc, and finally ‘DEFAULT’ corresponds to 7. With the exception of ‘DEFAULT’, each credit rating spread, say Sit , is modeled as a mean reverting processes in the form
 
-  			(1)
-
 where dWit is a standard Brownian motion process and log Sit is the natural logarithm of Sit . The parameters μi, ai and _i represent the speed of reversion, the mean reversion level and
 the volatility respectively.
 
-Equation (1) can be solved to yield
-
- 
+Equation can be solved to yield
 
 Note that although the spread processes are defined using continuous time, spread levels are
 simulated at m discrete time steps per year. That is, we sample the spread path at the times.
 
-At the same time frequency, names are assumed to migrate. To formalize this concept, suppose that
+At the same time frequency, names are assumed to migrate. To formalize this concept, suppose that represents the annual single step credit rating transition matrix. That is, pij is the probability
+of moving from credit rating i to credit rating j in 1 year. Since we are interested in transitions m times per year, S reflect the _t time single step credit rating transition matrix. Furthermore, let
+T be the cumulative _t time single step credit rating transition matrix by setting
 
- 
 
-represents the annual single step credit rating transition matrix. That is, pij is the probability
-of moving from credit rating i to credit rating j in 1 year. Since we are interested in transitions m times per year, let
+References:
 
- 
+https://finpricing.com/lib/FxForwardCurve.html
 
-reflect the _t time single step credit rating transition matrix. Furthermore, let
-
- 
-
-be the cumulative _t time single step credit rating transition matrix by setting
-
- 
-
+https://derivatives.hcommons.org/2020/09/02/product/
